@@ -13,10 +13,13 @@ router.get('/author', function(req, res, next) {
     res.render('author');
 });
 
+// Pagina para jugar
+//router.get('/quizzes/random_play', function(req, res, next) {
+  //  res.render('/quizzes/random_play');
+//});
 
 // Autoload de rutas que usen :quizId
 router.param('quizId', quizController.load);
-
 
 // Definición de rutas de /quizzes
 router.get('/quizzes',                     quizController.index);
@@ -29,6 +32,13 @@ router.delete('/quizzes/:quizId(\\d+)',    quizController.destroy);
 
 router.get('/quizzes/:quizId(\\d+)/play',  quizController.play);
 router.get('/quizzes/:quizId(\\d+)/check', quizController.check);
+
+
+//Definicion de rutas de random
+router.get('/quizzes/randomplay', quizController.randomplay);
+router.get('/quizzes/randomcheck/:quizId(\\d+)', quizController.randomcheck);
+//router.get('/quizzes/randomnone', quizController.randomnone);
+
 
 
 module.exports = router;

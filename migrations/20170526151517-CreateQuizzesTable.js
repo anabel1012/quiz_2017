@@ -30,10 +30,11 @@ module.exports = {
                 }
             },
             {
-                sync: {force: true}
+                sync: {force: true}//FORZAR CAMBIOS SI SE DETECTA ALGUNA INCOMPATIBILIDAD
             }
         );
     },
+
     down: function (queryInterface, Sequelize) {
         return queryInterface.dropTable('Quizzes');
     }
