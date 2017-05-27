@@ -2,40 +2,35 @@
 
 module.exports = {
     up: function (queryInterface, Sequelize) {
-        return queryInterface.createTable(
-            'Quizzes',
+        return queryInterface.bulkInsert('Quizzes', [
             {
-                id: {
-                    type: Sequelize.INTEGER,
-                    allowNull: false,
-                    primaryKey: true,
-                    autoIncrement: true,
-                    unique: true
-                },
-                question: {
-                    type: Sequelize.STRING,
-                    validate: {notEmpty: {msg: "Falta la Pregunta."}}
-                },
-                answer: {
-                    type: Sequelize.STRING,
-                    validate: {notEmpty: {msg: "Falta la Respuesta."}}
-                },
-                createdAt: {
-                    type: Sequelize.DATE,
-                    allowNull: false
-                },
-                updatedAt: {
-                    type: Sequelize.DATE,
-                    allowNull: false
-                }
+                question: 'Capital de Italia',
+                answer: 'Roma',
+                createdAt: new Date(),
+                updatedAt: new Date()
             },
             {
-                sync: {force: true}//FORZAR CAMBIOS SI SE DETECTA ALGUNA INCOMPATIBILIDAD
+                question: 'Capital de Portugal',
+                answer: 'Lisboa',
+                createdAt: new Date(),
+                updatedAt: new Date()
+            },
+            {
+                question: 'Capital de España',
+                answer: 'Madrid',
+                createdAt: new Date(),
+                updatedAt: new Date()
+            },
+            {
+                question: 'Capital de Francia',
+                answer: 'París',
+                createdAt: new Date(),
+                updatedAt: new Date()
             }
-        );
+        ]);
     },
 
     down: function (queryInterface, Sequelize) {
-        return queryInterface.dropTable('Quizzes');
+        return queryInterface.bulkDelete('Quizzes', null, {});
     }
 };

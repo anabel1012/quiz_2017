@@ -258,6 +258,6 @@ exports.randomcheck = function (req, res, next) {
 
 
   //GET     /quizzes/randomnone
-//exports.randomnone = function (req, res, next) {
-//    res.render('quizzes/random_none', {score:req.session.randomplay.resolved.length});
-//}
+exports.randomnone = function (req, res, next) {
+    res.render('quizzes/random_none', {score:req.session.randomplay.resolved.length});
+}
