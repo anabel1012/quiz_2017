@@ -193,7 +193,7 @@ exports.randomplay = function (req, res, next) {
         req.session.randomplay.resolved=aux;
 
     }
-    var used = req.session.randomplay.resolved.length ? req.session.randomplay.resolved:[-1];
+    var used = req.session.randomplay.resolved.length ? req.session.randomplay.resolved:[0];
     var whereopt = {'id': {$notIn: used}};
     models.Quiz.count()
         .then(function (count) {
