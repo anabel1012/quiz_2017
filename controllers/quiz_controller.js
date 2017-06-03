@@ -231,18 +231,17 @@ exports.randomcheck = function (req, res, next) {
     var answer = req.query.answer || "";
     var result = answer.toLowerCase().trim() === req.quiz.answer.toLowerCase().trim();//Si el usuario acierta -> true
     if(result){
-        var finalresult=req.session.randomplay.resolved.push(parseInt(req.quiz.id));
+        var score=req.session.randomplay.resolved.push(parseInt(req.quiz.id));
     } else{
-        finalresult=req.session.randomplay.resolved.push(parseInt(req.quiz.id))-1;
+        score=req.session.randomplay.resolved.push(parseInt(req.quiz.id))-1;
         req.session.randomplay.resolved= [];
-        score=0;
         req.session.randomplay.resolved.lenght=0;
     }
 
 
 
     res.render('quizzes/random_result', {
-       score: finalresult,
+       score: score,
        //score: "0",
         quizId: req.quiz.id,
         answer: answer,
@@ -254,11 +253,10 @@ exports.randomcheck = function (req, res, next) {
 };
 
 
-  //GET     /quizzes/random no more
-exports.randomnone = function (req, res, next) {
+  //GET     /quizzes/randomnomore
+exports.randomnomore = function (req, res, next) {
     res.render('quizzes/random_nomore', {
         score:req.session.randomplay.resolved.length
 
-        //score: 0
     });
 }

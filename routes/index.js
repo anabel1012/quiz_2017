@@ -37,7 +37,7 @@ router.get('/quizzes/:quizId(\\d+)/check', quizController.check);
 //Definicion de rutas de random
 router.get('/quizzes/randomplay', quizController.randomplay);
 router.get('/quizzes/randomcheck/:quizId(\\d+)', quizController.randomcheck);
-//router.get('/quizzes/randomnone', quizController.randomnone);
+router.get('/quizzes/randomnomore', quizController.randomnomore);
 
 
 // Pagina de ayuda
