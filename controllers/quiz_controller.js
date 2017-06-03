@@ -235,6 +235,8 @@ exports.randomcheck = function (req, res, next) {
     } else{
         finalresult=req.session.randomplay.resolved.push(parseInt(req.quiz.id))-1;
         req.session.randomplay.resolved= [];
+        score=0;
+        req.session.randomplay.resolved.lenght;
     }
 
 
