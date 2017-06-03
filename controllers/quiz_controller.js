@@ -23,14 +23,11 @@ exports.load = function (req, res, next, quizId) {
 
 // GET /quizzes
 exports.index = function (req, res, next) {
-
     var countOptions = {};
-
     // Busquedas:
     var search = req.query.search || '';
     if (search) {
         var search_like = "%" + search.replace(/ +/g,"%") + "%";
-
         countOptions.where = {question: { $like: search_like }};
     }
 
@@ -38,7 +35,6 @@ exports.index = function (req, res, next) {
     .then(function (count) {
 
         // Paginacion:
-
         var items_per_page = 10;
 
         // La pagina a mostrar viene en la query
@@ -69,23 +65,19 @@ exports.index = function (req, res, next) {
 
 // GET /quizzes/:quizId
 exports.show = function (req, res, next) {
-
     res.render('quizzes/show', {quiz: req.quiz});
 };
 
 
 // GET /quizzes/new
 exports.new = function (req, res, next) {
-
     var quiz = {question: "", answer: ""};
-
     res.render('quizzes/new', {quiz: quiz});
 };
 
 
 // POST /quizzes/create
 exports.create = function (req, res, next) {
-
     var quiz = models.Quiz.build({
         question: req.body.question,
         answer: req.body.answer
@@ -115,17 +107,14 @@ exports.create = function (req, res, next) {
 
 // GET /quizzes/:quizId/edit
 exports.edit = function (req, res, next) {
-
     res.render('quizzes/edit', {quiz: req.quiz});
 };
 
 
 // PUT /quizzes/:quizId
 exports.update = function (req, res, next) {
-
     req.quiz.question = req.body.question;
     req.quiz.answer = req.body.answer;
-
     req.quiz.save({fields: ["question", "answer"]})
     .then(function (quiz) {
         req.flash('success', 'Quiz editado con éxito.');
@@ -149,7 +138,6 @@ exports.update = function (req, res, next) {
 
 // DELETE /quizzes/:quizId
 exports.destroy = function (req, res, next) {
-
     req.quiz.destroy()
     .then(function () {
         req.flash('success', 'Quiz borrado con éxito.');
@@ -164,13 +152,16 @@ exports.destroy = function (req, res, next) {
 
 // GET /quizzes/:quizId/play
 exports.play = function (req, res, next) {
-
     var answer = req.query.answer || '';
-
+    score=0;
+    req.session.randomplay.resolved = 0;
+    req.session.randomplay.resolved = [];
+    req.session.randomplay.resolved.lenght = 0;
     res.render('quizzes/play', {
         quiz: req.quiz,
         answer: answer
     });
+
 };
 
 
@@ -178,9 +169,7 @@ exports.play = function (req, res, next) {
 exports.check = function (req, res, next) {
 
     var answer = req.query.answer || "";
-
     var result = answer.toLowerCase().trim() === req.quiz.answer.toLowerCase().trim();
-
     res.render('quizzes/result', {
         quiz: req.quiz,
         result: result,
@@ -189,10 +178,10 @@ exports.check = function (req, res, next) {
 };
 
 exports.randomplay = function (req, res, next) {
-
     if(req.session.randomplay){
         if(req.session.randomplay.resolved){
             var used = req.session.randomplay.resolved.length ? req.session.randomplay.resolved:[-1];
+          //  var score = 18;
         } else {
             var aux = []
             req.session.randomplay.resolved=aux;
@@ -204,7 +193,6 @@ exports.randomplay = function (req, res, next) {
         req.session.randomplay.resolved=aux;
 
     }
-
     var used = req.session.randomplay.resolved.length ? req.session.randomplay.resolved:[-1];
     var whereopt = {'id': {$notIn: used}};
     models.Quiz.count()
@@ -212,7 +200,7 @@ exports.randomplay = function (req, res, next) {
             if(count===used.length){
                 var score = req.session.randomplay.resolved.length;
                 req.session.randomplay.resolved=[];
-                res.render('quizzes/random_none', {score:score});
+                res.render('quizzes/random_nomore', {score:score});
                 next();
             }
             var max = count - req.session.randomplay.resolved.length-1;
@@ -225,11 +213,12 @@ exports.randomplay = function (req, res, next) {
             return models.Quiz.findAll(findOptions);
         })
         .then(function (quiz) {
-
             res.render('quizzes/random_play', {
                 quiz: quiz[0],
-                score: req.session.randomplay.resolved.length
+               score: req.session.randomplay.resolved.length
+               // score: "0"
             });
+         //   score = 0 ;
         })
         .catch(function (error) {
             next(error);
@@ -242,22 +231,32 @@ exports.randomcheck = function (req, res, next) {
     var answer = req.query.answer || "";
     var result = answer.toLowerCase().trim() === req.quiz.answer.toLowerCase().trim();//Si el usuario acierta -> true
     if(result){
-        req.session.randomplay.resolved.push(parseInt(req.quiz.id));
+        var finalresult=req.session.randomplay.resolved.push(parseInt(req.quiz.id));
+    } else{
+        finalresult=req.session.randomplay.resolved.push(parseInt(req.quiz.id))-1;
+        req.session.randomplay.resolved= [];
     }
 
 
+
     res.render('quizzes/random_result', {
-        score: req.session.randomplay.resolved.length,
+       score: finalresult,
+       //score: "0",
         quizId: req.quiz.id,
         answer: answer,
         result: result
     });
+    req.session.randomplay.resolved.length = 0;
+    req.session.randomplay.resolved= [];
 
 };
 
 
-
-  //GET     /quizzes/randomnone
+  //GET     /quizzes/random no more
 exports.randomnone = function (req, res, next) {
-    res.render('quizzes/random_none', {score:req.session.randomplay.resolved.length});
+    res.render('quizzes/random_nomore', {
+        score:req.session.randomplay.resolved.length
+
+        //score: 0
+    });
 }
