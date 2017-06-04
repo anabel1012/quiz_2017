@@ -38,3 +38,6 @@ module.exports = {
         return queryInterface.dropTable('Tips');
     }
 };
+
+Contact GitHub API Training Shop Blog About
+
