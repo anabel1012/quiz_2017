@@ -46,6 +46,10 @@ router.get('/author', function (req, res, next) {
     res.render('author');
 });
 
+// Pagina para jugar
+//router.get('/quizzes/random_play', function(req, res, next) {
+  //  res.render('/quizzes/random_play');
+//});
 
 // Autoload de rutas que usen :quizId
 router.param('quizId', quizController.load);
@@ -84,7 +88,6 @@ router.delete('/users/:userId(\\d+)',
     userController.destroy);  // borrar cuenta
 
 router.get('/users/:userId(\\d+)/quizzes', quizController.index);     // ver las preguntas de un usuario
-
 
 
 // Definición de rutas de /quizzes
@@ -130,6 +133,18 @@ router.put('/quizzes/:quizId(\\d+)/tips/:tipId(\\d+)/accept',
 router.delete('/quizzes/:quizId(\\d+)/tips/:tipId(\\d+)',
     sessionController.loginRequired,
     tipController.destroy);
+
+
+//Definicion de rutas de random
+router.get('/quizzes/randomplay', quizController.randomplay);
+router.get('/quizzes/randomcheck/:quizId(\\d+)', quizController.randomcheck);
+router.get('/quizzes/randomnomore', quizController.randomnomore);
+
+
+// Pagina de ayuda
+router.get('/help', function(req, res, next) {
+    res.render('help');
+});
 
 
 module.exports = router;

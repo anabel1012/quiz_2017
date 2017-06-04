@@ -2,7 +2,6 @@
 
 module.exports = {
     up: function (queryInterface, Sequelize) {
-
         return queryInterface.bulkInsert('Quizzes', [
             {
                 question: 'Capital de Italia',
@@ -32,7 +31,6 @@ module.exports = {
     },
 
     down: function (queryInterface, Sequelize) {
-
         return queryInterface.bulkDelete('Quizzes', null, {});
     }
 };
