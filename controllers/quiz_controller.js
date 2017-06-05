@@ -8,8 +8,9 @@ exports.load = function (req, res, next, quizId) {
 
     models.Quiz.findById(quizId, {
         include: [
-            models.Tip,
+            {model: models.Tip, include: [{model:models.User, as : 'Author'}]},
             {model: models.User, as: 'Author'}
+
         ]
     })
     .then(function (quiz) {
@@ -24,6 +25,7 @@ exports.load = function (req, res, next, quizId) {
         next(error);
     });
 };
+
 
 
 // MW que permite acciones solamente si al usuario logeado es admin o es el autor del quiz.
@@ -54,6 +56,7 @@ exports.index = function (req, res, next) {
 
     var countOptions = {};
 
+
     // Busquedas:
     var search = req.query.search || '';
     if (search) {
@@ -62,6 +65,8 @@ exports.index = function (req, res, next) {
 
         countOptions.where.question = { $like: search_like };
     }
+
+
 
     // Si existe req.user, mostrar solo sus preguntas.
     if (req.user) {
@@ -86,6 +91,7 @@ exports.index = function (req, res, next) {
         res.locals.paginate_control = paginate(count, items_per_page, pageno, req.url);
 
         var findOptions = countOptions;
+
 
         findOptions.offset = items_per_page * (pageno - 1);
         findOptions.limit = items_per_page;
@@ -230,7 +236,7 @@ exports.randomplay = function (req, res, next) {
     if(req.session.randomplay){
         if(req.session.randomplay.resolved){
             var used = req.session.randomplay.resolved.length ? req.session.randomplay.resolved:[-1];
-          //  var score = 18;
+         
         } else {
             var aux = []
             req.session.randomplay.resolved=aux;
@@ -257,7 +263,11 @@ exports.randomplay = function (req, res, next) {
             var findOptions = {
                 where: whereopt,
                 offset: random,
-                limit: 1
+                limit: 1,
+                include: [
+                    models.Tip,
+                    {model:models.User, as: "Author"}
+                ]
             };
             return models.Quiz.findAll(findOptions);
         })
